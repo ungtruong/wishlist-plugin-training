@@ -1,0 +1,47 @@
+            {% block popup_wishlist_all %}
+                {% set popupWishlistOptions = {
+
+                    path: path('frontend.wishlist.get.wishlist.add.product', {productId : productId}),
+                    token: sw_csrf('frontend.wishlist.get.wishlist.add.product', {"mode": "token"}),
+                    productId : productId
+
+                } %}
+                <div class="modal fade" id="wishlistAll-{{productId}}" tabindex="-1" role="dialog" 
+                    aria-labelledby="wishlistAll-{{productId}}" 
+                    aria-hidden="true"
+                    
+                    data-popup-add-wishlist="true"
+                    data-popup-add-wishlist-options="{{ popupWishlistOptions|json_encode }}"
+                    >
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add to My Wishlist</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="{{ path('frontend.wishlist.upsert.product') }}" method="POST">
+                                <div class="modal-body">
+                                    {{ sw_csrf('frontend.wishlist.upsert.product') }}
+                                    <input type="hidden" value="{{ productId }}" name="productId">
+                                    <div class="form-group">
+                                        <label for="email">Please add to another wishlist</label>
+                                            <select class="form-control form-select append-wishlist-data" aria-label="wishlist data" name="wishlistId">
+                                            </select>
+                                    </div>
+                                    {% if config('WishlistPlugin.config.isMultiveWishlist') %}
+                                    <div class="form-group">
+                                        <label for="pwd">Or create a new wishlist:</label>
+                                        <input type="text" name="name" class="form-control">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary submit-to-add">Add</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}

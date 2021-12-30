@@ -1,0 +1,124 @@
+{% block component_product_wishlist %}
+    {% set addToWishlistOptions = {
+        productId: productId,
+        router: {
+            add: {
+                afterLoginPath: path('frontend.wishlist.add.after.login', { productId: productId }),
+                path: path('frontend.wishlist.product.add', { productId: productId }),
+                token: sw_csrf('frontend.wishlist.product.add', {"mode": "token"})
+            },
+            remove: {
+                path: path('frontend.wishlist.product.remove', { productId: productId }),
+                token: sw_csrf('frontend.wishlist.product.remove', {"mode": "token"}),
+            }
+        }
+    } %}
+
+    {% set size = size ?? 'md' %}
+    {% if  not (hideWishlist) %}
+        <div class="product-wishlist">
+            {% block component_product_wishlist_button %}
+                <button
+                    class="{{classPopUp}} product-wishlist-{{ productId }} product-wishlist-action{% if appearance == 'circle' %}-circle{% endif %} product-wishlist-not-added product-wishlist-loading"
+                    title="{{ "listing.toggleWishlist"|trans|sw_sanitize }}"
+                    {# data-add-to-wishlist="true"
+                    data-add-to-wishlist-options="{{ addToWishlistOptions|json_encode }}" #}
+                    {% set checkProductOptions = {productId : productId} %}
+                    data-check-product-added-wishlist="true"
+                    data-check-product-added-wishlist-options="{{ checkProductOptions | json_encode  }}" >
+                    
+                
+                    {% block component_product_wishlist_icon %}
+                        {% sw_icon 'heart-fill' style { 'class': 'wishlist icon-wishlist-added', 'size': size } %}
+                        {% sw_icon 'heart' style {'class': 'wishlist icon-wishlist-not-added', 'size': size } %}
+                        {% if showText %}
+                            <span class="btnproduct-wishlist-btn-content text-wishlist-not-added product-wishlist-btn-content-{{ size }}">
+                                {# {{ "listing.addToWishlist"|trans|sw_sanitize }} #}
+                            </span>
+                            <span class="product-wishlist-btn-content text-wishlist-remove product-wishlist-btn-content-{{ size }}">
+                                {# {{ "listing.removeFromWishlist"|trans|sw_sanitize }} #}
+                                The product is already added to therse wishlists
+                            </span>
+                        {% endif %}
+                    {% endblock %}
+                    {% if(classPopUp) %}
+                        <div class="reaction-box">
+                            {% set getAllWishlistOptions = {
+                                router: {
+                                    path: path('frontend.wishlist.get.wishlist.add.product', {productId : productId}),
+                                    token: sw_csrf('frontend.wishlist.get.wishlist.add.product', {"mode": "token"}),
+                                    productId : productId
+                                }
+                            } %}
+                            <div class="reaction-select">
+                                <div class="reaction-icon open-popup" 
+                                    data-get-all-wishlist="true" 
+                                    data-get-all-wishlist-options="{{ getAllWishlistOptions|json_encode }}" 
+                                    id="productData-{{productId}}">
+                                    
+
+                                    {% sw_icon 'plus'   style {  'size': 'xs', 'pack': 'solid' , 'color': 'light' } %}
+
+                                </div>
+                                {% set getWishlistByProduct = {
+                                    router: {
+                                        path: path('frontend.wishlist.get.by.product', {productId : productId}),
+                                        productId : productId,
+                                        pathDetail: path('frontend.wishlistplugin.detail', { wishlistId: 0 }),
+                                        pathDelete : path('frontend.wishlist.remove.product'),
+                                        tokenDelete: sw_csrf('frontend.wishlist.remove.product', {"mode": "token"}),
+                                    }
+                                } %}
+                                <div class="reaction-icon go-wishlist"
+                                    data-get-wishlist-by-product="true"
+                                    data-get-wishlist-by-product-options="{{ getWishlistByProduct|json_encode }}" >
+                                    {% sw_icon 'eye-open' style {  'size': 'xs'  , 'color': 'light'} %}
+                                </div>
+                        </div>
+                    {% endif %}
+                </button>
+
+                
+            {% endblock %}
+            {% if(classPopUp) %}
+                {# popup another #}
+                {% sw_include '@Storefront/storefront/element/popup-wishlist-another.html.twig' with {
+                    appearance: 'circle',
+                    productId: productId
+                } %}
+                {% block popup_wishlist_of_product %}
+                    {% set popupWishlistProductOptions = {
+                        tokenDelete: sw_csrf('ffrontend.wishlist.get.by.product', {"mode": "token"}),
+                        productId : productId,
+                        pathDelete : path('frontend.wishlist.remove.product')
+                    } %}
+                    <div class="modal fade" id="wishlistByProduct-{{productId}}" tabindex="-1" role="dialog" 
+                        aria-labelledby="wishlistByProduct-{{productId}}" 
+                        aria-hidden="true"
+                        
+                        data-popup-delete-wishlist-product="true"
+                        data-popup-delete-wishlist-product-options="{{ popupWishlistProductOptions|json_encode }}"
+                        >
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">The product belongs to the following wishlists</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="append-wishlist-data"></div>
+                                    <div class="empty-wishlist">
+                                        <p>The product doens't belong to any wishlist!</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

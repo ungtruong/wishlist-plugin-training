@@ -1,0 +1,162 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+{% block base_head %}
+    {% sw_include '@Storefront/storefront/page/wishlist-plugin/meta.html.twig' %}
+{% endblock %}
+{% block page_account_main_content %}
+    {% block base_flashbags %}
+        <div class="flashbags container">
+            {% for type, messages in app.flashes %}
+                {% sw_include '@Storefront/storefront/utilities/alert.html.twig' with { type: type, list: messages } %}
+            {% endfor %}
+        </div>
+    {% endblock %}
+    {#  Main Block #}
+    <div class="account-wishlist">
+        {% block page_account_address_welcome %}
+            {# Header Title of Wishlist  #}
+            <div class="account-welcome">
+                {% block page_account_address_welcome_headline %}
+                <div class="row card-col">
+                    <div class="col-lg-6">
+                        <h1>
+                            Wishlist
+                        </h1>
+                    </div>
+                    
+                {% block page_account_address_item_content_create %}
+                <div class="col-lg-6">
+                    <div class="wishlist-action-create float-right">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#creare-wishlist-modal">
+                        Create a new wishlist
+                    </button>
+                    </div>
+                </div>
+                {% endblock %}
+                </div>
+                {% endblock %}
+                {% block page_account_address_welcome_intro %}
+
+                    <p>
+                        Your Recent Wishlist
+                    </p>
+                {% endblock %}
+            </div>
+            {# End header Title of Wishlist #}
+        {% endblock %}
+
+        <div class="confirm-product">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title cart-table-header">
+                        <div class="row cart-header-row whishlist-extend">
+                            <div class="col-5 wishlist-header-info">
+                                Wishlist Name
+                            </div>
+
+                            <div class="col-2 wishlist-header-count-item">
+                                Count of Items
+                            </div>
+
+                            <div class="col-3 wishlist-header-created-date">
+                                Created On
+                            </div>
+
+                            <div class="col-2 wishlist-header-delete">
+                                Delete
+                            </div>
+                        </div>
+                    </div>
+                {# Block for parse data #}
+                {% for detail in wishlistData %}
+                <div class="cart-item cart-item-product ">
+                    {% block page_checkout_item_info %}
+                    <div class="col-12 cart-item-info whishlist-item-extend">
+                        <div class="row cart-header-row whishlist-extend">
+                            <div class="col-5 wishlist-item-info">
+                                <a href="{{ path('frontend.wishlistplugin.detail', { wishlistId: detail.id }) }}">{{detail.name}}</a>
+                                
+                            </div>
+
+                            <div class="col-2 wishlist-item-count-item">
+                               {{detail.wishlistProducts.count()}}
+                            </div>
+
+                            <div class="col-3 wishlist-item-created-date">
+                                {{ detail.createdAt|format_date(pattern="dd/MM/Y") }}
+                            </div>
+
+                            <div class="col-2 wishlist-item-delete">
+
+                                <form action="{{ path('frontend.wishlistplugin.delete', { wishlistId: detail.id }) }}" method="POST">
+                                     {{ sw_csrf('frontend.wishlistplugin.delete') }}
+                                    <button href="{{ path('frontend.wishlistplugin.delete', { wishlistId: detail.id }) }}" class="btn btn-light btn-sm order-hide-btn collapsed" >
+                                        X
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+                {% endfor %}
+                {# End Block for parse data #}
+                </div>
+            </div>
+        </div>
+
+        
+
+
+
+    </div>
+    {# End Main Block #}
+
+    {# Block For Modal Creare New Wishlist #}
+    {% block modal_create_wishlist %}
+    <div class="modal fade" id="creare-wishlist-modal" tabindex="-1" role="dialog" aria-labelledby="creare-wishlist-modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="creare-wishlist-modalLabel">Create a new wishlist</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+    <form action="{{ path('frontend.wishlistplugin.create') }}"
+          method="post"
+          data-form-csrf-handler="true"
+          data-form-validation="true">
+                {% block cms_form_contact_csrf %}
+                    {{ sw_csrf('frontend.wishlistplugin.create') }}
+                {% endblock %}
+                    {% block cms_form_contact_input_first_name %}
+                        
+                        {% sw_include '@Storefront/storefront/element/cms-element-form/form-components/cms-element-form-input.html.twig'
+                            with {
+                            fieldName: 'name',
+                            required: true,
+                            additionalClass: 'col-md-12',
+                            label: 'Whistlist name',
+                            placeholder: 'Enter wishlist....'
+                        }
+                        %}
+                    {% endblock %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit"  value="Submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+    {% endblock  %}
+    {# End Block For Modal Creare New Wishlist #}
+ 
+{% endblock %}
+
+
+
+
+

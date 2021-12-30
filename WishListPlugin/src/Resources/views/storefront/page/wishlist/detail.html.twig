@@ -1,0 +1,20 @@
+{% block base_content %}
+    {% block page_wishlist %}
+        <div class="cms-page wishlist-page">
+            {% set searchResult = page.wishlist.productListing %}
+            {% if (context.customer and not context.customer.guest) || shared %}
+                {% sw_include '@Storefront/storefront/page/wishlist/wishlist-pagelet.html.twig' with { searchResult: searchResult } %}
+            {% else %}
+                {% set guestWishlistPageOptions = {
+                    pageletRouter: {
+                        path: path('frontend.wishlist.guestPage.pagelet'),
+                        token: sw_csrf('frontend.wishlist.guestPage.pagelet', {'mode': 'token'})
+                    }
+                } %}
+                
+                <div class="row mh-100" data-guest-wishlist-page="true" data-guest-wishlist-page-options="{{ guestWishlistPageOptions|json_encode }}"></div>
+                {# {% sw_include '@Storefront/storefront/page/wishlist/wishlist-pagelet.html.twig' with { searchResult: searchResult } %} #}
+            {% endif %}
+        </div>
+    {% endblock %}
+{% endblock %}

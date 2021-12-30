@@ -1,0 +1,87 @@
+{% sw_extends '@Storefront/storefront/component/product/listing.html.twig' %}
+{% block product_listing %} 
+    {% if (page.wishlist.productListing.total > 0) %}
+        {% block element_product_listing_data %}
+
+            <div class="cms-element-product-listing">
+                <div class="cms-element-product-listing-wrapper"
+                    data-listing-pagination="true"
+                    data-listing-pagination-options='{{ paginationConfig }}'
+                    data-listing="true"
+                    data-listing-options='{{ listingPagination|json_encode }}'>
+                        {% block element_product_listing_wrapper_content %}
+                            {% if searchResult.total > 0 %}
+                                {% block element_product_listing_pagination_nav_actions %}
+                                    <div class="cms-element-product-listing-actions row justify-content-between">
+                                        <div class="col-md-auto">
+                                            {% block element_product_listing_pagination_nav_top %}
+                                                {% sw_include '@Storefront/storefront/component/pagination.html.twig' with {
+                                                    entities: searchResult,
+                                                    criteria: searchResult.criteria
+                                                } %}
+                                            {% endblock %}
+                                        </div>
+
+                                        <div class="col-md-auto">
+                                            {% block element_product_listing_sorting %}
+                                                {% sw_include '@Storefront/storefront/component/sorting.html.twig' with {
+                                                    current: searchResult.sorting,
+                                                    sortings: searchResult.availableSortings
+                                                } %}
+                                            {% endblock %}
+                                        </div>
+                                    </div>
+                                {% endblock %}
+                            {% endif %}
+                            
+                            <div class="card checkout-product-table">
+                                <div class="card-body">
+                                    
+                                
+                                    {% block page_checkout_cart_table_header %}
+                                        {% sw_include '@Storefront/storefront/page/wishlist-plugin/product/table-whistlist-product-detail.html.twig' %}
+                                        
+                                    {% endblock %} 
+
+                                    {% block page_checkout_cart_table_items %}
+                                        {%set wishlistProducts = page.wishlist.productListing.entities %}
+
+                                        {% for product in wishlistProducts %}
+                                            {% block page_checkout_cart_table_item %}
+                                                {% block page_checkout_item %}
+                                                    {% sw_include '@Storefront/storefront/page/wishlist-plugin/product/product-parse.html.twig' %}
+                                                {% endblock %}
+                                            {% endblock %}
+                                        {% endfor %}
+                                    {% endblock %}
+                                </div>
+                            </div>
+                        
+                        {% endblock %}
+                            {% if searchResult.total > searchResult.limit %}
+                                {% block element_product_listing_pagination_nav_bottom %}
+                                    {% sw_include '@Storefront/storefront/component/pagination.html.twig' with {
+                                        entities: searchResult,
+                                        criteria: searchResult.criteria
+                                    } %}
+                                {% endblock %}
+                            {% endif %}
+                </div>
+            </div>
+        {% endblock %}
+    {% else  %}
+        {% block element_product_listing_col_empty %}
+            <div class="cms-listing-col wishlist-listing-col col-12">
+                {% block element_product_listing_col_empty_wishlist %}
+                    <img src="{{ asset('bundles/storefront/assets/illustration/wishlist_empty.svg', 'theme') }}"
+                        alt="{{ "wishlist.wishlistEmptyDescription"|trans|striptags }}"
+                        class="wishlist-listing-empty"/>
+                        
+                    <h1 class="text-center wishlist-listing-header">{{ "wishlist.wishlistEmptyHeader"|trans }}</h1>
+                    <p class="text-center wishlist-listing-description">{{ "wishlist.wishlistEmptyDescription"|trans }}</p>
+                {% endblock %}
+            </div>
+        {% endblock %}
+    {% endif  %}
+{% endblock %}
+

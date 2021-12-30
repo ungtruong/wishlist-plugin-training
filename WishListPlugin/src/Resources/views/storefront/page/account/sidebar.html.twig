@@ -1,0 +1,15 @@
+{% sw_extends '@Storefront/storefront/page/account/sidebar.html.twig' %}
+
+
+{% block page_account_sidebar_menu %}
+    {{ parent() }}
+    {% if not context.customer.guest %}
+        <a href="{{ path('frontend.wishlistplugin.page') }}"
+            title="Wish List"
+            class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('frontend.wishlistplugin.page') %} is-active{% endif %}">
+            Wish List Plugin
+        </a>
+    {% endif %}
+    
+{% endblock %}
+

@@ -1,0 +1,36 @@
+{% block layout_header_search %}
+        <div class="header-search" style="margin-left: 0px">
+            <form action="{{ path('frontend.wishlistplugin.add.productSuggest', { wishlistId: wishlistId }) }}"
+                  method="POST"
+                  data-search-suggest="true"
+                  data-url="{{ path('frontend.wishlistplugin.search.suggest') }}?search="
+                  class="header-search-form">
+                  {{ sw_csrf('frontend.wishlistplugin.add.productSuggest') }}
+                {% block layout_header_search_input_group %}
+                    <div class="input-group">
+                        {% block layout_header_search_input %}
+                            <input type="search"
+                                   name="search"
+                                   class="form-control header-search-input"
+                                   autocomplete="off"
+                                   autocapitalize="off"
+                                   placeholder="{{ "header.searchPlaceholder"|trans|striptags }}"
+                                   aria-label="{{ "header.searchPlaceholder"|trans|striptags }}"
+                                   value="{{ page.searchTerm }}"
+                            >
+                        {% endblock %}
+
+                        {% block layout_header_search_button %}
+                            <div class="input-group-append">
+                                <button type="submit"
+                                        class="btn btn-primary"
+                                        aria-label="{{ "header.searchButton"|trans|striptags }}">
+                                Add
+                                </button>
+                            </div>
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            </form>
+        </div>
+{% endblock %}

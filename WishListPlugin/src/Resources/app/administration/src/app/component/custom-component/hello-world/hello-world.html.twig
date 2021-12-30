@@ -1,0 +1,40 @@
+<div class="sw-snippet-field">
+    <sw-field
+        v-bind="$attrs"
+        :value="defaultValue"
+        :type="fieldType"
+        :disabled="isDisabled"
+        @change="setInput"
+    />
+
+
+    <div class="sw-field--switch sw-form-field-renderer sw-field--switch-bordered is--bordered sw-field--default __web-inspector-hide-shortcut__">
+        <div class="sw-field--switch__content">
+            <div class="sw-field--switch__input">
+                <input id="check" type="checkbox" name="WishlistPlugin.config.isMultive" :checked="isChecked" @change="checkInput2" />
+                <div class="sw-field__switch-state">
+                    <div class="sw-field__switch-state-knob"></div>
+                </div>
+            </div>
+            <div class="sw-field">
+                <div class="sw-field__label">
+                    <!---->
+                    <label for="check" class="">
+                        Allow multiple wishlists
+                    </label>
+                    <!---->
+                </div>
+                <!---->
+                <!---->
+            </div>
+        </div>
+        <!---->
+    </div>
+
+</div>
+
+
+
+
+
+

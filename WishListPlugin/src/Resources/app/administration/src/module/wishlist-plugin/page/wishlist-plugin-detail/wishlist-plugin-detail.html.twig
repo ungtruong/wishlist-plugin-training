@@ -1,0 +1,25 @@
+{% block wishlist_list %}
+    <sw-page class="wishlist-plugin-list">
+        <template slot="content">
+            {% block swag_bundle_list_content %}
+                <sw-data-grid
+                    v-if="bundles"
+                    :data-source="bundles"
+                    :repository="repository"
+                    :showSelection="false"
+                    :columns="columns"
+                >
+                    {% block sw_product_name %}
+                        <template #column-products.name="{ item, column}">
+                            <router-link
+                                v-if="item.products.id"
+                                :to="{ name: column.routerLink, params: { id: item.products.id } }">
+                                {{ item.products.name }}  
+                            </router-link>
+                        </template>
+                    {% endblock %}
+                </sw-data-grid>
+            {% endblock %}
+        </template>
+    </sw-page>
+{% endblock %}

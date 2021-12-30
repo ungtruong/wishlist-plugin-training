@@ -1,0 +1,28 @@
+{
+  "name": "swag/wish-list-plugin",
+  "description": "WhishList Plugin ",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "UngTHP"
+    }
+  ],
+  "require": {
+    "shopware/core": "*",
+    "shopware/storefront": "*",
+    "shopware/administration": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Wishlist\\WishlistPlugin\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "Wishlist\\WishlistPlugin\\WishlistPlugin",
+    "label": {
+      "de-DE": "Whishlist Plugin",
+      "en-GB": "Whishlist Plugin"
+    }
+  }
+}

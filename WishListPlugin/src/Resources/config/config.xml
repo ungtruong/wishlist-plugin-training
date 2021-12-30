@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"                                                                                                    
+xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>Settings</title>
+        <input-field type="int">
+            <name>itemPerPage</name>
+            <label>Limitation of items to display per page. If field is not filled, the default value is 5</label>
+            <defaultValue>5</defaultValue>
+        </input-field>
+        <input-field type="int">
+            <name>maxWhishList</name>
+            <label>Maximum of wishlist per user. If field is not filled, the default value is 4</label>
+            <defaultValue>4</defaultValue>
+        </input-field>
+        <input-field type="bool">
+            <name>isMultiveWishlist</name>
+            <label>Allow multiple wishlists</label>
+        </input-field>
+        <input-field type="bool">
+            <name>isRemove</name>
+            <label>Remove products from wishlist after adding to cart by default</label>
+        </input-field>
+    </card>
+    <card>
+        <title>Popular products slider configuration</title>
+        <input-field type="bool">
+            <name>isShowPopular</name>
+            <label>Automatically show on every CMS Page</label>
+        </input-field>
+        <input-field type="int">
+            <name>popularProduct</name>
+            <label>Quantity added product in wishlists to display in slider</label>
+            <defaultValue>1</defaultValue>
+        </input-field>
+    </card>
+    <card>
+        <title>Wishlist Detail Layout</title>
+        <input-field type="bool">
+            <name>isCard</name>
+            <label>Show wishlist as cardview</label>
+        </input-field>
+    </card>
+</config>

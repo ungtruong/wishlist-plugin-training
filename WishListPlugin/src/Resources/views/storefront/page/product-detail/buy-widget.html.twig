@@ -1,0 +1,81 @@
+{% sw_extends '@Storefront/storefront/page/product-detail/buy-widget.html.twig' %}
+
+{% block page_product_detail_buy_inner %}
+    <div class="product-detail-buy js-magnifier-zoom-image-container">
+        {{ block('page_product_detail_not_available') }}
+
+        {{ block('page_product_detail_buy_container') }}
+        {{ block('page_product_detail_ordernumber_container') }}
+            {% set wishlistplugins = page.product.extensions.wishlistPlugins %}
+            {% set customerWishlist = [] %}
+            {% for wishlist in wishlistplugins%}
+                {% set customerWishlist  = customerWishlist|merge({ (wishlist.customerId): true }) %} 
+            {% endfor %}
+            {% if customerWishlist %}
+                {% block count_user_added %}
+                <div class="count-user-add-product">
+                    {{ customerWishlist | length }} user(s) added this product to their wishlist
+                </div>
+                {% endblock %}
+            {% endif %}
+            {% block page_product_detail_wishlist %}
+                {% if (context.customer is not null and not context.customer.guest) %}
+                    {% sw_include '@WishlistPlugin/storefront/component/product/card/wishlist-plugin.html.twig' with {
+                        showText: true,
+                        size: 'md',
+                        productId: page.product.id
+                    } %}
+                {% else %}
+                    {% sw_include '@Storefront/storefront/component/product/card/wishlist.html.twig' with {
+                        showText: true,
+                        size: 'md',
+                        productId: page.product.id
+                    } %}
+                {% endif %}
+            {% endblock %}
+            {% if (context.customer is not null and not context.customer.guest) %}
+                <div class="wishlist-action-create ">
+                        {% set getAllWishlistOptions = {
+                            router: {
+                                path: path('frontend.wishlist.get.wishlist.add.product', {productId : page.product.id}),
+                                token: sw_csrf('frontend.wishlist.get.wishlist.add.product', {"mode": "token"}),
+                                productId : page.product.id
+                            }
+                        } %}
+                        {% set getWishlistByProduct = {
+                            router: {
+                                path: path('frontend.wishlist.get.by.product', {productId : page.product.id}),
+                                productId : page.product.id,
+                                pathDetail: path('frontend.wishlistplugin.detail', { wishlistId: 0 }),
+                                pathDelete : path('frontend.wishlist.remove.product'),
+                                tokenDelete: sw_csrf('frontend.wishlist.remove.product', {"mode": "token"}),
+                            }
+                        } %}
+
+                        <div class="append-wishlist-data" 
+                             data-get-wishlist-belongs="true" 
+                             data-get-wishlist-belongs-options="{{ getWishlistByProduct|json_encode }}" 
+                             id="remove-wishlist-product-list">
+                        </div>
+
+                        </form>
+                    <div class="dropdown">
+                        <button class="btn btn-primary" type="button" 
+                        data-get-all-wishlist="true" 
+                        data-get-all-wishlist-options="{{ getAllWishlistOptions|json_encode }}" 
+                        id="productData-{{page.product.id}}">
+                            Add to another wishlist
+                        </button>
+                    </div>
+                    {# popup another #}
+                    {% sw_include '@Storefront/storefront/element/popup-wishlist-another.html.twig' with {
+                        appearance: 'circle',
+                        productId: page.product.id
+                    } %}
+
+
+                </div>
+            {% endif %}
+    </div>
+
+{% endblock %}

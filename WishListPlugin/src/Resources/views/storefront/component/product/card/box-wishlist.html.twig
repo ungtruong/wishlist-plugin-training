@@ -1,0 +1,99 @@
+{% sw_extends '@Storefront/storefront/component/product/card/box-wishlist.html.twig' %}
+        {% block component_product_box_wishlist %}
+        
+            <div class="product-wishlist product-wishlist-remove">
+                {# {% set wishlistPlugin  = product.extensions.wishlistProducts.elements | first %} #}
+                    {% set wishlistProducts = (product.extensions.wishlistProducts.elements) ?? [] %}
+                    {% set wishlistProduct = null  %}
+                    {% for k, v in wishlistProducts|filter((v, k) => v.wishlistPluginId == wishlistId) %}
+                        {% set wishlistProduct = v %}
+                    {% endfor %}
+
+                    {% block component_product_wishlist_remove_form %}
+                        {% set size = size ?? 'md' %}
+                        {% if context.customer and not context.customer.guest %}
+                            <form action="{{ path('frontend.wishlist.product.delete', {'wishlistProductId': wishlistProduct.id}) }}"
+                                method="post"
+                                class="product-wishlist-form">
+
+                                {% block component_product_box_wishlist_plugin_remove_csrf %}
+                                    {{ sw_csrf('frontend.wishlist.product.delete') }}
+                                {% endblock %}
+
+                                {% block component_product_wishlist_plugin_remove_redirect %}
+                                    <input type="hidden"
+                                        name="redirectTo"
+                                        value=  "{{ path('frontend.wishlistplugin.detail', {'wishlistId': page.wishlist.wishlist.id}) }}" />
+                                {% endblock %}
+
+                                {% block component_product_wishlist_plugin_remove_submit %}
+                                    <button type="submit" class="btn product-wishlist-btn product-wishlist-btn-remove">
+                                        {% sw_icon 'x' style { 'class': 'icon-wishlist icon-wishlist-remove', 'size': size, 'pack': 'solid' } %}
+                                    </button>
+                                {% endblock %}
+                            </form>
+                        {% else %}
+                            <form action="{{ path('frontend.wishlist.product.delete', {'wishlistProductId': id}) }}"
+                                method="post"
+                                class="product-wishlist-form"
+                                data-form-csrf-handler="true">
+
+                                {% block component_product_box_wishlist_remove_csrf %}
+                                    {{ sw_csrf('frontend.wishlist.product.delete') }}
+                                {% endblock %}
+
+                                {% block component_product_wishlist_remove_redirect %}
+                                    <input type="hidden"
+                                        name="redirectTo"
+                                        value="frontend.wishlist.page"/>
+                                {% endblock %}
+
+                                {% block component_product_wishlist_remove_submit %}
+                                    <button type="submit" class="btn product-wishlist-btn product-wishlist-btn-remove">
+                                        {% sw_icon 'x' style { 'class': 'icon-wishlist icon-wishlist-remove', 'size': size, 'pack': 'solid' } %}
+                                    </button>
+                                {% endblock %}
+                            </form>
+                        {% endif %}
+                    {% endblock %}
+            </div>
+        {% endblock %}
+        
+        {% block component_product_box_currently_not_available %}
+            {% if context.customer and not context.customer.guest %}
+                {% set urlWishlistDetail = path('frontend.wishlistplugin.detail', { wishlistId: page.wishlist.wishlist.id }) %}
+                    {% set wishlistProducts = (product.extensions.wishlistProducts.elements) ?? [] %}
+                    {% set wishlistProduct = null  %}
+                    {% for k, v in wishlistProducts|filter((v, k) => v.wishlistPluginId == wishlistId) %}
+                        {% set wishlistProduct = v %}
+                    {% endfor %}
+                <div class="row">
+                    <div class="col-12">
+                            <form style="margin-left:0px;width:100%" action="{{ path('frontend.wishlist.product.update.quantity' , { 'wislistProductId' : wishlistProduct.id }) }}" class="cart-item-quantity-container" method="post" data-form-auto-submit="true">
+                                {{ sw_csrf('frontend.wishlist.product.update.quantity') }}
+                                <input type="hidden" name="redirectTo" value="{{ urlWishlistDetail }}" />
+                                {# <input type="hidden" name="id" value="{{ wishlistProduct.id  }}" /> #}
+                                {% set maxQuantity = (product.maxPurchase)?  product.maxPurchase : config('core.cart.maxQuantity')%}
+                                Quantity : <select name="quantity" class="custom-select quantity-select" style="width:30%">
+                                    {% for quantity in range(product.minPurchase, maxQuantity, product.purchaseSteps) %}
+                                            <option value="{{ quantity }}"
+                                                {% if quantity == wishlistProduct.quantity %} selected="selected"{% endif %}>
+                                                {{ quantity }}
+                                            </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                    
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
+        {% block component_product_box_action %}
+            {% set wishlistProducts = (product.extensions.wishlistProducts.elements) ?? [] %}
+                {% set wishlistProduct = null  %}
+                {% for k, v in wishlistProducts|filter((v, k) => v.wishlistPluginId == wishlistId) %}
+                    {% set wishlistProduct = v %}
+            {% endfor %}
+            {% sw_include '@WishlistPlugin/storefront/component/product/card/my-action.html.twig' %}
+        {% endblock %}
+        

@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Wishlist\WishlistPlugin\Extension\Content\Product\WishlistProductExtension">
+            <tag name="shopware.entity.extension"/>
+        </service>
+        <service id="Wishlist\WishlistPlugin\Core\Content\WishlistPlugin\WishlistPluginDefinition">
+            <tag name="shopware.entity.definition" entity="wishlist_plugin" />
+        </service>
+
+        <!-- <service id="Wishlist\WishlistPlugin\Core\Content\WishlistPluginProduct\WishlistPluginProductDefinition">
+            <tag name="shopware.entity.definition" entity="wishlist_plugin_product" />
+        </service>  -->
+        <service id="Wishlist\WishlistPlugin\Extension\Content\Product\WishlistPluginProductDefinition">
+            <tag name="shopware.entity.definition" entity="wishlist_plugin_product" />
+        </service>
+
+        <service id="Wishlist\WishlistPlugin\Storefront\Controller\WishlistPluginController" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService" />
+            <argument type="service" id="wishlist_plugin.repository"/>
+            <argument type="service" id="wishlist_plugin_product.repository"/>
+            <argument type="service" id="Shopware\Storefront\Page\Suggest\SuggestPageLoader"/>
+            <argument type="service" id="product.repository"/>
+            <!-- <argument type="service" id="sales_channel.product.repository"/> -->
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <!-- Listener -->
+        <service id="Wishlist\WishlistPlugin\Listener\GetWishlistProductListener">
+            <tag name="kernel.event_listener" event="Shopware\Storefront\Page\Product\ProductPageCriteriaEvent" />
+        </service>
+
+        <!-- New Service -->
+        <service id="Wishlist\WishlistPlugin\Storefront\Page\Wishlist\WishlistPageLoader">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\LoadWishlistRoute"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="Shopware\Storefront\Page\Wishlist\GuestWishlistPageLoader">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>  
+        
+
+        <service id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\LoadWishlistRoute" public="true">
+            <!-- <argument type="service" id="customer_wishlist.repository"/> -->
+            <argument type="service" id="wishlist_plugin.repository"/>
+
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="wishlist_plugin_product.repository"/>
+        </service>  
+
+        <service id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\AddWishlistProductRoute" public="true">
+            <argument type="service" id="customer_wishlist.repository"/>
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\RemoveWishlistProductRoute" public="true">
+            <!-- <argument type="service" id="customer_wishlist.repository"/>
+            <argument type="service" id="customer_wishlist_product.repository"/> -->
+            <argument type="service" id="wishlist_plugin.repository"/>
+            <argument type="service" id="wishlist_plugin_product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service> 
+
+        <service id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\MergeWishlistProductRoute" public="true">
+            <!-- <argument type="service" id="customer_wishlist.repository"/> -->
+            <!-- <argument type="service" id="sales_channel.product.repository"/> -->
+            <argument type="service" id="wishlist_plugin.repository"/>
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="wishlist_plugin_product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>   
+        <service id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\UpdateWishlistProductRoute" public="true">
+            <argument type="service" id="customer_wishlist.repository"/>
+            <argument type="service" id="wishlist_plugin_product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service> 
+        <service id="Wishlist\WishlistPlugin\Storefront\Page\Wishlist\GuestWishlistPageLoader">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="Wishlist\WishlistPlugin\Storefront\Pagelet\Wishlist\GuestWishlistPageletLoader">
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\ProductListRoute"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+
+        <service id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\WishlistHandleRoute" public="true">
+            <!-- <argument type="service" id="customer_wishlist.repository"/> -->
+            <argument type="service" id="wishlist_plugin.repository"/>
+            <argument type="service" id="wishlist_plugin_product.repository"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service> 
+
+        <!-- New Controller -->
+        <service id="Wishlist\WishlistPlugin\Storefront\Controller\WishlistController" public="true">
+            <argument type="service" id="Wishlist\WishlistPlugin\Storefront\Page\Wishlist\WishlistPageLoader"/>
+
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\LoadWishlistRoute"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\AddWishlistProductRoute"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\RemoveWishlistProductRoute"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\MergeWishlistProductRoute"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Storefront\Page\Wishlist\GuestWishlistPageLoader"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Storefront\Pagelet\Wishlist\GuestWishlistPageletLoader"/>
+            
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\UpdateWishlistProductRoute"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <!-- AbstractWishlistHandleRoute -->
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\WishlistHandleRoute"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService" />
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+        <!-- Cookie -->
+       <!-- <service id="Wishlist\WishlistPlugin\Framework\Cookie\CustomCookieProvider"
+                decorates="Shopware\Storefront\Framework\Cookie\CookieProviderInterface">
+             <argument type="service" 
+                       id="Wishlist\WishlistPlugin\Framework\Cookie\CustomCookieProvider.inner" />
+         </service> -->
+        <service id="Wishlist\WishlistPlugin\DataResolver\ProductPopularSliderCmsElementResolver">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Wishlist\WishlistPlugin\Core\Checkout\Customer\SalesChannel\LoadWishlistRoute"/>
+
+            <tag name="shopware.cms.data_resolver" />
+        </service>
+    </services>
+</container>

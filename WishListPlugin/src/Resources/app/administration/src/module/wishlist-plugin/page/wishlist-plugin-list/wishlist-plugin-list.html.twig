@@ -1,0 +1,28 @@
+{% block wishlist_list %}
+    <sw-page class="swag-bundle-list">
+        <template slot="content">
+            {% block swag_bundle_list_content %}
+                <sw-data-grid
+                    v-if="bundles"
+                    :data-source="bundles"
+                    :repository="repository"
+                    :showSelection="false"
+                    :columns="columns"
+                >
+                {% block sw_customer_name %}
+                    <template #column-customers.firstName="{ item }">
+                            {{ item.customers.lastName }}, {{ item.customers.firstName }}
+                    </template>
+                {% endblock %}
+                {% block sw_product_count %}
+                    <template #column-products="{ item }">
+                        {{item.products.length}}
+                    </template>
+                {% endblock %}
+                </sw-data-grid>
+            {% endblock %}
+
+        </template>
+
+    </sw-page>
+{% endblock %}

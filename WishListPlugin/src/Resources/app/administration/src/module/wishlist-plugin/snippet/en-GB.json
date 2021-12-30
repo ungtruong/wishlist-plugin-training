@@ -1,0 +1,18 @@
+{
+    "wishlist": {
+        "general": {
+            "mainMenuItemGeneral": "Wishlist",
+            "descriptionTextModule": "Manage wishlists here"
+        },
+        "list": {
+            "columnName": "Name",
+            "columnCustomerName" : "Customer Name",
+            "columnCountProduct": "Number of Product"
+        },
+        "detail" : {
+            "columnQuantity" : "Quantity",
+            "columnProductId" : "Product Id",
+            "columnProductName" : "Product Name"
+        }
+    }
+}

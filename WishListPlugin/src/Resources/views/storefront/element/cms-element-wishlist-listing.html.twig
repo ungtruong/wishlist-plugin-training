@@ -1,0 +1,54 @@
+{% block element_wishlist_listing %}
+
+    {% set listingColumns = 'col-sm-6 col-lg-4 col-xl-6' %}
+    {% if section and section.type == 'sidebar' %}
+        {% set listingColumns = 'col-sm-6 col-lg-6 col-xl-6' %}
+    {% endif %}
+    {% if not (context.customer is not null and not context.customer.guest)  and not shared %}
+        {% set listingColumns = 'col-sm-6 col-lg-3 col-xl-3' %}
+    {% endif %}
+    {% set slot = null %}
+
+    {% set filterUrl = null %}
+    
+
+    {% set boxLayout = 'wishlist' %}
+    {% set displayMode = null %}
+
+    {% set sidebar = sectionType == 'sidebar' %}
+
+    {% set params = { slots: slot.id, 'no-aggregations': 1 } %}
+
+    {% block element_wishlist_listing_wrapper %}
+    {% if page.wishlist.wishlist.id %}
+        {% set dataUrl = url('widgets.wishlistplugin.pagelet', { wishlistId : page.wishlist.wishlist.id }) %}
+    {% else %}
+        {% set dataUrl = url('widgets.wishlist.pagelet') %}
+    {% endif %}
+        {% if not config('WishlistPlugin.config.isCard') %}
+        {% sw_include '@WishlistPlugin/storefront/component/product/listing-row.html.twig' with {
+            searchResult: searchResult,
+            dataUrl: dataUrl,
+            filterUrl: filterUrl,
+            disableEmptyFilter: false,
+            params: params,
+            sidebar: sidebar,
+            boxLayout: boxLayout,
+            displayMode: displayMode,
+            listingColumns: listingColumns
+        } %}
+        {% else %}
+        {% sw_include '@Storefront/storefront/component/wishlist/listing.html.twig' with {
+            searchResult: searchResult,
+            dataUrl: dataUrl,
+            filterUrl: filterUrl,
+            disableEmptyFilter: false,
+            params: params,
+            sidebar: sidebar,
+            boxLayout: boxLayout,
+            displayMode: displayMode,
+            listingColumns: listingColumns
+        } %} 
+        {% endif %}
+    {% endblock %}
+{% endblock %}

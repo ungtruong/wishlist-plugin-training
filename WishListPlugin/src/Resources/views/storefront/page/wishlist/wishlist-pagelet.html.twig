@@ -1,0 +1,21 @@
+
+{% block block_wishlist_listing %}
+
+{% if not(context.customer is not null and not context.customer.guest) %}
+    {% if not (shared) %}
+        {% block search %}
+                <div class="col-12 ">
+                    {% sw_include '@Storefront/storefront/page/wishlist-plugin/search/search-box-guest.html.twig' %}
+                </div>
+
+        {% endblock %}
+    {% endif %}
+{% endif %}
+    <div class="col-12">
+        {% if searchResult.total > 0  %}
+        {% endif %}
+            {% block block_wishlist_listing_inner %}
+                {% sw_include "@Storefront/storefront/element/cms-element-wishlist-listing.html.twig"   %}
+            {% endblock %}
+    </div>
+{% endblock %}

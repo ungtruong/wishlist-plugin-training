@@ -1,0 +1,52 @@
+{# {% sw_extends '@Storefront/storefront/layout/header/header.html.twig' %}
+    {% block layout_header_actions_wishlist %}
+        <div class="col-auto">
+            <div class="header-wishlist">
+                <a class="btn header-wishlist-btn header-actions-btn"
+                    href="{{ path('frontend.wishlistplugin.page') }}"
+                    title="{{ 'header.wishlist'|trans|striptags }}"
+                    aria-label="{{ 'header.wishlist'|trans|striptags }}">
+                    {% sw_include '@Storefront/storefront/layout/header/actions/wishlist-widget.html.twig' %}
+                </a>
+            </div>
+        </div>
+    {% endblock %} #}
+{% sw_extends '@Storefront/storefront/layout/header/header.html.twig' %}
+    
+    {% block layout_header_actions %}
+    <div class="col-12 order-1 col-sm-auto order-sm-2 header-actions-col">
+        <div class="row no-gutters">
+        {{ block('layout_header_navigation_toggle') }}
+
+        {{ block('layout_header_search_toggle') }}
+        {% block layout_header_actions_wishlist %}
+            {% if (context.customer is not null and not context.customer.guest) %}
+                <div class="col-auto">
+                    <div class="header-wishlist">
+                        <a class="btn header-wishlist-btn header-actions-btn"
+                            href="{{ path('frontend.wishlistplugin.page') }}"
+                            title="{{ 'header.wishlist'|trans|striptags }}"
+                            aria-label="{{ 'header.wishlist'|trans|striptags }}">
+                            {% sw_include '@Storefront/storefront/layout/header/actions/wishlist-widget.html.twig' %}
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-auto">
+                    <div class="header-wishlist">
+                        <a class="btn header-wishlist-btn header-actions-btn"
+                            href="{{ path('frontend.wishlist.page') }}"
+                            title="{{ 'header.wishlist'|trans|striptags }}"
+                            aria-label="{{ 'header.wishlist'|trans|striptags }}">
+                            {% sw_include '@Storefront/storefront/layout/header/actions/wishlist-widget.html.twig' %}
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
+        {{ block('layout_header_actions_account') }}
+
+        {{ block('layout_header_actions_cart') }}
+        </div>
+    </div>
+    {% endblock %}

@@ -1,0 +1,25 @@
+{% block page_checkout_cart_header_container %}
+    <div class="card-title cart-table-header">
+        <div class="row cart-header-row">
+            {% block page_checkout_cart_header_product_info %}
+                <div class="col-5 cart-header-info">
+                    {{ "checkout.cartHeaderInfo"|trans|sw_sanitize }}
+                </div>
+            {% endblock %}
+
+            {% block page_checkout_cart_header_quantity %}
+                {% if context.customer and not context.customer.guest %}
+                    <div class="col-3 cart-header-quantity">
+                        {{ "checkout.cartHeaderQuantity"|trans|sw_sanitize }}
+                    </div>
+                {% endif %}
+            {% endblock %}
+
+            {% block page_checkout_cart_header_unit_price %}
+                <div class="col-4 cart-header-unit-price">
+                    {{ "checkout.cartHeaderUnitPrice"|trans|sw_sanitize }}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
